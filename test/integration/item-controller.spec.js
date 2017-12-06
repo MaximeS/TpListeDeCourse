@@ -136,7 +136,7 @@ describe('itemController', () => {
       })
       describe('When I want to flag my items as ok',()=>{
           it('should flag my item as bought',()=>{
-            const item="My Test Item"
+            const item="My Test Item 3"
             const myList="Toto"
             return request(app)
               .put('/item-lists')
@@ -164,7 +164,7 @@ describe('itemController', () => {
               })
           })
           it('should reject when there is no list name given',()=>{
-            const item="My Test Item"
+            const item="My Test Item 3"
             return request(app)
               .put('/item-lists')
               .send({itemname:item})
@@ -195,7 +195,7 @@ describe('itemController', () => {
               })
           })
           it('should reject when there is a wrong list name given',()=>{
-            const item="My Test Item"
+            const item="My Test Item 3"
             const myList="Not existant"
             return request(app)
               .put('/item-lists')

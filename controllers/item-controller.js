@@ -37,7 +37,6 @@ router.get('/',(req,res,next)=>{
     }
     const name=req.body.name
     const result = find(courseListCollection, { name })
-    console.log(result)
     if(result){
         return res.json({
             data:result.list
@@ -53,13 +52,13 @@ router.put('/',(req,res,next)=>{
         return next(new BadRequestError('VALIDATION', 'No item name'))
     }
     const listname=req.body.listname
-    const listresult = find(courseListCollection,{ listname })
+    const listresult = find(courseListCollection, { name:listname })
     if(!listresult)
     {
         return next(new BadRequestError('VALIDATION', 'Not existant list name'))
     }
     const itemname=req.body.itemname
-    const itemresult=find(listresult,{itemname})
+    const itemresult=find(listresult.list,{name:itemname})
     if(!itemresult)
     {
         return next(new BadRequestError('VALIDATION', 'Not existant item name'))
