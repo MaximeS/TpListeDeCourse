@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const BadRequestError = require('../errors/bad-request')
-const { find } = require('lodash')
+const { find, remove, findAll} = require('lodash')
+const uuid=require('../lib/guuid')
 
 const db = require('../data/db')
 const courseListCollection = db.courseList
@@ -20,7 +21,7 @@ router.post('/', (req, res, next) => {
   }
 
   const newCourseList = {
-    id: courseListCollection.length + 1,
+    id: uuid.generateUuid(),
     name
   }
 
@@ -30,26 +31,32 @@ router.post('/', (req, res, next) => {
     data: newCourseList
   })
 })
-router.post('/deletelist',(req,res,next)=>{
+router.delete('/',(req,res,next)=>{
   if(!req.body.name)
   {
-    return next(new BadRequestError('VALIDATION','No name given'))
+    res.status(400)
+    return res.json({
+      error: {
+        code: 'VALIDATION',
+        message: 'No name given'
+      }
+    })
   }
   const name = req.body.name
   const result = find(courseListCollection,{name})
-  if(result)
+  if(!result)
   {
-    delete courseListCollection[result.id -1]
-    return res.json({message : 'Deleted'})
-  }
-  else
-  {
+    
     return next(new BadRequestError('VALIDATION','Not existant list can t be deleted'))
   }
+  remove (courseListCollection,{name})
+  return res.json({message : 'Deleted'})
 })
 
-router.get('/lists',(req,res,next)=>{
-  return courseListCollection
+router.get('/',(req,res,next)=>{
+  res.json({
+    data: courseListCollection,
+  })
 })
 
 module.exports = router
